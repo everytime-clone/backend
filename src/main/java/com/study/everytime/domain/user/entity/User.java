@@ -1,6 +1,5 @@
 package com.study.everytime.domain.user.entity;
 
-import com.study.everytime.global.auth.dto.Provider;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
