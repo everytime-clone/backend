@@ -11,3 +11,7 @@ spring:
         highlight_sql: true
     hibernate:
       ddl-auto: create
+
+jwt:
+  issuer: ${JWT_ISSUER}
+  secret: ${JWT_SECRET}
