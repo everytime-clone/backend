@@ -18,16 +18,17 @@ public class JwtUtils {
     private final String TOKEN_TYPE = "token_type";
     private final String ACCESS = "access";
     private final String REFRESH = "refresh";
-    private final Long ACCESS_EXPIRE_TIME = 18_000_000L;
-    private final Long REFRESH_EXPIRE_TIME = 1_209_600_000L;
 
     private final SecretKey secretKey;
-    private final String issuer;
+    @Value("${jwt.issuer}")
+    private String issuer;
+    @Value("${jwt.access-expiration}")
+    private Long ACCESS_EXPIRE_TIME;
+    @Value("${jwt.refresh-expiration}")
+    private Long REFRESH_EXPIRE_TIME;
 
-    public JwtUtils(@Value("${jwt.secret}") String secret,
-                    @Value("${jwt.issuer}") String issuer) {
+    public JwtUtils(@Value("${jwt.secret}") String secret) {
         secretKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
-        this.issuer = issuer;
     }
 
     private String createToken(String type, Long expireTime, Long userId) {
