@@ -32,6 +32,10 @@ public class AuthService {
     }
 
     public void join(SignUpDto.Request request) {
+        if (userRepository.existsByProviderAndSub(request.provider(), request.sub())) {
+            throw new AuthException.AlreadyJoinedUserException();
+        }
+
         User user = User.of(request.username(), request.email(), request.provider(), request.sub());
         userRepository.save(user);
     }
