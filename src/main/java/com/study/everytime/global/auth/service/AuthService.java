@@ -5,23 +5,23 @@ import com.study.everytime.domain.user.repository.UserRepository;
 import com.study.everytime.global.auth.dto.SignInDto;
 import com.study.everytime.global.auth.dto.SignUpDto;
 import com.study.everytime.global.auth.exception.AuthException;
+import com.study.everytime.global.auth.util.JwtProperties;
 import com.study.everytime.global.auth.util.JwtUtils;
 import com.study.everytime.global.redis.domain.Token;
 import com.study.everytime.global.redis.repository.TokenRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class AuthService {
 
     private final JwtUtils jwtUtils;
+    private final JwtProperties jwtProperties;
     private final UserRepository userRepository;
     private final TokenRepository tokenRepository;
-
-    @Value("${jwt.refresh-expiration}")
-    private Long REFRESH_EXPIRATION_TIME;
 
     public SignInDto.Response issueToken(SignInDto.Request request) {
         User user = userRepository.findByProviderAndSub(request.provider(), request.sub())
@@ -29,7 +29,7 @@ public class AuthService {
 
         String accessToken = jwtUtils.createAccessToken(user.getId());
         String refreshToken = jwtUtils.createRefreshToken(user.getId());
-        tokenRepository.save(Token.of(user.getId(), refreshToken, REFRESH_EXPIRATION_TIME));
+        tokenRepository.save(Token.of(user.getId(), refreshToken, jwtProperties.refreshExpiration()));
 
         return new SignInDto.Response(accessToken, refreshToken);
     }

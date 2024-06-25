@@ -6,7 +6,6 @@ import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
@@ -20,20 +19,16 @@ public class JwtUtils {
     private final String REFRESH = "refresh";
 
     private final SecretKey secretKey;
-    @Value("${jwt.issuer}")
-    private String issuer;
-    @Value("${jwt.access-expiration}")
-    private Long ACCESS_EXPIRE_TIME;
-    @Value("${jwt.refresh-expiration}")
-    private Long REFRESH_EXPIRE_TIME;
+    private final JwtProperties jwtProperties;
 
-    public JwtUtils(@Value("${jwt.secret}") String secret) {
-        secretKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
+    public JwtUtils(JwtProperties jwtProperties) {
+        this.secretKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtProperties.secret()));
+        this.jwtProperties = jwtProperties;
     }
 
     private String createToken(String type, Long expireTime, Long userId) {
         return Jwts.builder()
-                .issuer(issuer)
+                .issuer(jwtProperties.issuer())
                 .subject(userId.toString())
                 .claim(TOKEN_TYPE, type)
                 .issuedAt(new Date())
@@ -43,11 +38,11 @@ public class JwtUtils {
     }
 
     public String createAccessToken(Long userId) {
-        return createToken(ACCESS, ACCESS_EXPIRE_TIME, userId);
+        return createToken(ACCESS, jwtProperties.accessExpiration(), userId);
     }
 
     public String createRefreshToken(Long userId) {
-        return createToken(REFRESH, REFRESH_EXPIRE_TIME, userId);
+        return createToken(REFRESH, jwtProperties.refreshExpiration(), userId);
     }
 
     private Claims getClaims(String token) {
