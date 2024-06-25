@@ -27,16 +27,19 @@ public class AuthService {
         User user = userRepository.findByProviderAndSub(request.provider(), request.sub())
                 .orElseThrow(AuthException.NotJoinedUserException::new);
 
-        String accessToken = jwtUtils.createAccessToken(user.getId());
-        String refreshToken = jwtUtils.createRefreshToken(user.getId());
-        tokenRepository.save(Token.of(user.getId(), refreshToken, jwtProperties.refreshExpiration()));
-
-        return new SignInDto.Response(accessToken, refreshToken);
+        JwtUtils.TokenPair tokenPair = createTokenPair(user.getId());
+        return new SignInDto.Response(tokenPair.accessToken(), tokenPair.RefreshToken());
     }
 
     public void join(SignUpDto.Request request) {
         User user = User.of(request.username(), request.email(), request.provider(), request.sub());
         userRepository.save(user);
+    }
+
+    private JwtUtils.TokenPair createTokenPair(Long userId) {
+        JwtUtils.TokenPair tokenPair = jwtUtils.createTokenPair(userId);
+        tokenRepository.save(Token.of(userId, tokenPair.RefreshToken(), jwtProperties.refreshExpiration()));
+        return tokenPair;
     }
 
 }
