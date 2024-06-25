@@ -21,6 +21,16 @@ public sealed class AuthException extends BusinessException {
         }
     }
 
+    public static final class AlreadyJoinedUserException extends AuthException {
+        public AlreadyJoinedUserException() {
+            super(DEFAULT_CODE_PREFIX, 3, HttpStatus.BAD_REQUEST, "이미 가입한 사용자입니다.");
+        }
+
+        public AlreadyJoinedUserException(String message) {
+            super(DEFAULT_CODE_PREFIX, 3, HttpStatus.BAD_REQUEST, message);
+        }
+    }
+
     public static final class InvalidTokenException extends AuthException {
         public InvalidTokenException() {
             super(DEFAULT_CODE_PREFIX, 2, HttpStatus.BAD_REQUEST, "유효하지 않은 토큰입니다.");

@@ -3,10 +3,12 @@ package com.study.everytime.global.redis.domain;
 import jakarta.persistence.Id;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.TimeToLive;
 
 @RedisHash(value = "token")
+@Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class Token {
 

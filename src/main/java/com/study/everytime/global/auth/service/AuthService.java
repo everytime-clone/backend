@@ -2,6 +2,7 @@ package com.study.everytime.global.auth.service;
 
 import com.study.everytime.domain.user.entity.User;
 import com.study.everytime.domain.user.repository.UserRepository;
+import com.study.everytime.global.auth.dto.ReissueDto;
 import com.study.everytime.global.auth.dto.SignInDto;
 import com.study.everytime.global.auth.dto.SignUpDto;
 import com.study.everytime.global.auth.exception.AuthException;
@@ -27,16 +28,38 @@ public class AuthService {
         User user = userRepository.findByProviderAndSub(request.provider(), request.sub())
                 .orElseThrow(AuthException.NotJoinedUserException::new);
 
-        String accessToken = jwtUtils.createAccessToken(user.getId());
-        String refreshToken = jwtUtils.createRefreshToken(user.getId());
-        tokenRepository.save(Token.of(user.getId(), refreshToken, jwtProperties.refreshExpiration()));
-
-        return new SignInDto.Response(accessToken, refreshToken);
+        JwtUtils.TokenPair tokenPair = createTokenPair(user.getId());
+        return new SignInDto.Response(tokenPair.accessToken(), tokenPair.RefreshToken());
     }
 
     public void join(SignUpDto.Request request) {
+        if (userRepository.existsByProviderAndSub(request.provider(), request.sub())) {
+            throw new AuthException.AlreadyJoinedUserException();
+        }
+
         User user = User.of(request.username(), request.email(), request.provider(), request.sub());
         userRepository.save(user);
+    }
+
+    public ReissueDto.Response reissueToken(ReissueDto.Request request) {
+        String refreshToken = request.refreshToken();
+        Long userId = jwtUtils.parseRefreshToken(refreshToken);
+
+        Token token = tokenRepository.findById(userId)
+                .orElseThrow(AuthException.InvalidTokenException::new);
+
+        if (!token.getToken().equals(refreshToken)) {
+            throw new AuthException.InvalidTokenException();
+        }
+
+        JwtUtils.TokenPair tokenPair = createTokenPair(userId);
+        return new ReissueDto.Response(tokenPair.accessToken(), tokenPair.RefreshToken());
+    }
+
+    private JwtUtils.TokenPair createTokenPair(Long userId) {
+        JwtUtils.TokenPair tokenPair = jwtUtils.createTokenPair(userId);
+        tokenRepository.save(Token.of(userId, tokenPair.RefreshToken(), jwtProperties.refreshExpiration()));
+        return tokenPair;
     }
 
 }

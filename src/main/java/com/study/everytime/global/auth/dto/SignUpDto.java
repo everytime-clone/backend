@@ -12,9 +12,4 @@ public class SignUpDto {
     ) {
     }
 
-    public record Response(
-            String token
-    ) {
-    }
-
 }
