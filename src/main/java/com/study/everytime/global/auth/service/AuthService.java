@@ -28,7 +28,7 @@ public class AuthService {
         User user = userRepository.findByProviderAndSub(request.provider(), request.sub())
                 .orElseThrow(AuthException.NotJoinedUserException::new);
 
-        JwtUtils.TokenPair tokenPair = createTokenPair(user.getId());
+        TokenPair tokenPair = createTokenPair(user.getId());
         return new SignInDto.Response(tokenPair.accessToken(), tokenPair.RefreshToken());
     }
 
@@ -52,14 +52,23 @@ public class AuthService {
             throw new AuthException.InvalidTokenException();
         }
 
-        JwtUtils.TokenPair tokenPair = createTokenPair(userId);
+        TokenPair tokenPair = createTokenPair(userId);
         return new ReissueDto.Response(tokenPair.accessToken(), tokenPair.RefreshToken());
     }
 
-    private JwtUtils.TokenPair createTokenPair(Long userId) {
-        JwtUtils.TokenPair tokenPair = jwtUtils.createTokenPair(userId);
+    private TokenPair createTokenPair(Long userId) {
+        String accessToken = jwtUtils.createAccessToken(userId);
+        String refreshToken = jwtUtils.createRefreshToken(userId);
+
+        TokenPair tokenPair = new TokenPair(accessToken, refreshToken);
         tokenRepository.save(Token.of(userId, tokenPair.RefreshToken(), jwtProperties.refreshExpiration()));
         return tokenPair;
+    }
+
+    public record TokenPair(
+            String accessToken,
+            String RefreshToken
+    ) {
     }
 
 }
