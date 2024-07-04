@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 
 public sealed class AuthException extends BusinessException {
 
-    private static final String DEFAULT_CODE_PREFIX = "USER";
+    private static final String DEFAULT_CODE_PREFIX = "AUTH";
 
     public AuthException(String codePrefix, int errorCode, HttpStatus httpStatus, String errorMessage) {
         super(codePrefix, errorCode, httpStatus, errorMessage);
