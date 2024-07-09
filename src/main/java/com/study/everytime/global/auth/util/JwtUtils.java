@@ -37,17 +37,11 @@ public class JwtUtils {
                 .compact();
     }
 
-    public TokenPair createTokenPair(Long userId) {
-        String accessToken = createAccessToken(userId);
-        String refreshToken = createRefreshToken(userId);
-        return new TokenPair(accessToken, refreshToken);
-    }
-
-    private String createAccessToken(Long userId) {
+    public String createAccessToken(Long userId) {
         return createToken(ACCESS, jwtProperties.accessExpiration(), userId);
     }
 
-    private String createRefreshToken(Long userId) {
+    public String createRefreshToken(Long userId) {
         return createToken(REFRESH, jwtProperties.refreshExpiration(), userId);
     }
 
@@ -81,12 +75,6 @@ public class JwtUtils {
             throw new AuthException.InvalidTokenException();
 
         return Long.valueOf(claims.getSubject());
-    }
-
-    public record TokenPair(
-            String accessToken,
-            String RefreshToken
-    ) {
     }
 
 }
