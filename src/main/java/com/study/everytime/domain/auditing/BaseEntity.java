@@ -22,10 +22,10 @@ public class BaseEntity {
     private LocalDateTime createdAt;
     @CreatedBy
     @Column(updatable = false)
-    private String createdBy;
+    private Long createdBy;
     @LastModifiedDate
     private LocalDateTime modifiedAt;
     @LastModifiedBy
-    private String modifiedBy;
+    private Long modifiedBy;
 
 }
