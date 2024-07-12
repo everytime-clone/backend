@@ -5,14 +5,21 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
+
+import java.time.LocalDateTime;
 
 @Entity
+@Table(indexes = @Index(name = "idx__provider__sub", columnList = "provider, sub"))
+@SQLDelete(sql = "UPDATE user SET deleted_at = NOW() WHERE user_id=?")
+@SQLRestriction("deleted_at is NULL")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(indexes = @Index(name = "idx__provider__sub", columnList = "provider, sub"))
 public class User extends BaseTimeEntity {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
     private Long id;
 
@@ -21,6 +28,8 @@ public class User extends BaseTimeEntity {
 
     private Provider provider;
     private String sub;
+
+    private LocalDateTime deletedAt;
 
     private User(String username, String email, Provider provider, String sub) {
         this.username = username;
