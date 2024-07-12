@@ -5,8 +5,14 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
+
+import java.time.LocalDateTime;
 
 @Entity
+@SQLDelete(sql = "UPDATE board SET deleted_at = NOW() WHERE board_id=?")
+@SQLRestriction("deleted_at is NULL")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Board extends BaseEntity {
@@ -18,6 +24,8 @@ public class Board extends BaseEntity {
 
     private String name;
     private String description;
+
+    private LocalDateTime deletedAt;
 
     public Board(String name, String description) {
         this.name = name;
