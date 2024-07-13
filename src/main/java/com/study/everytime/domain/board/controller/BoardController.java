@@ -7,18 +7,19 @@ import com.study.everytime.domain.board.dto.UpdateBoardDto;
 import com.study.everytime.domain.board.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/board")
+@RequiredArgsConstructor
 public class BoardController {
 
     private final BoardService boardService;
 
     @PostMapping
-    public void createBoard(@RequestBody CreateBoardDto dto) {
-        boardService.createBoard(dto);
+    public void createBoard(@AuthenticationPrincipal Long userId, @RequestBody CreateBoardDto dto) {
+        boardService.createBoard(userId, dto);
     }
 
     @GetMapping("/{boardId}")
@@ -31,14 +32,16 @@ public class BoardController {
         return boardService.searchBoard(name, pageable);
     }
 
-    @PatchMapping
-    public void updateBoard(@RequestBody UpdateBoardDto dto) {
-        boardService.updateBoard(dto);
+    @PatchMapping(value = "/{boardId}", params = "inform")
+    public void updateBoardInform(@AuthenticationPrincipal Long userId,
+                                  @PathVariable Long boardId,
+                                  @RequestBody UpdateBoardDto.Inform dto) {
+        boardService.updateBoardInform(userId, boardId, dto);
     }
 
     @DeleteMapping("/{boardId}")
-    public void deleteBoard(@PathVariable Long boardId) {
-        boardService.deleteBoard(boardId);
+    public void deleteBoard(@AuthenticationPrincipal Long userId, @PathVariable Long boardId) {
+        boardService.deleteBoard(userId, boardId);
     }
 
 }

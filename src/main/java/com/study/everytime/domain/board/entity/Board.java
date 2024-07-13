@@ -1,6 +1,7 @@
 package com.study.everytime.domain.board.entity;
 
 import com.study.everytime.domain.auditing.BaseEntity;
+import com.study.everytime.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -25,14 +26,19 @@ public class Board extends BaseEntity {
     private String name;
     private String description;
 
+    @ManyToOne
+    @JoinColumn(name = "admin_id")
+    private User admin;
+
     private LocalDateTime deletedAt;
 
-    public Board(String name, String description) {
+    public Board(String name, String description, User admin) {
         this.name = name;
         this.description = description;
+        this.admin = admin;
     }
 
-    public void update(String name, String description) {
+    public void updateInform(String name, String description) {
         this.name = name;
         this.description = description;
     }
