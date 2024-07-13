@@ -49,6 +49,14 @@ public class BoardService {
         board.updateInform(dto.name(), dto.description());
     }
 
+    public void updateBoardAdmin(Long userId, Long boardId, UpdateBoardDto.Admin dto) {
+        Board board = getBoard(boardId);
+        checkAuthority(userId, board);
+
+        User newAdmin = getUserByUsername(dto.username());
+        board.updateAdmin(newAdmin);
+    }
+
     public void deleteBoard(Long userId, Long boardId) {
         Board board = getBoard(boardId);
         checkAuthority(userId, board);
@@ -57,6 +65,11 @@ public class BoardService {
 
     private User getUser(Long userId) {
         return userRepository.findById(userId)
+                .orElseThrow(UserException.UserNotFoundException::new);
+    }
+
+    private User getUserByUsername(String username) {
+        return userRepository.findByUsername(username)
                 .orElseThrow(UserException.UserNotFoundException::new);
     }
 

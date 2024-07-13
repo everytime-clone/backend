@@ -39,6 +39,13 @@ public class BoardController {
         boardService.updateBoardInform(userId, boardId, dto);
     }
 
+    @PatchMapping(value = "/{boardId}", params = "admin")
+    public void updateBoardAdmin(@AuthenticationPrincipal Long userId,
+                                 @PathVariable Long boardId,
+                                 @RequestBody UpdateBoardDto.Admin dto) {
+        boardService.updateBoardAdmin(userId, boardId, dto);
+    }
+
     @DeleteMapping("/{boardId}")
     public void deleteBoard(@AuthenticationPrincipal Long userId, @PathVariable Long boardId) {
         boardService.deleteBoard(userId, boardId);

@@ -43,4 +43,8 @@ public class Board extends BaseEntity {
         this.description = description;
     }
 
+    public void updateAdmin(User admin) {
+        this.admin = admin;
+    }
+
 }
