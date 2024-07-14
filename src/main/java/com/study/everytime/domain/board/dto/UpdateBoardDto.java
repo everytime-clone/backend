@@ -1,8 +1,16 @@
 package com.study.everytime.domain.board.dto;
 
-public record UpdateBoardDto(
-        Long boardId,
-        String name,
-        String description
-) {
+public class UpdateBoardDto {
+
+    public record Inform(
+            String name,
+            String description
+    ) {
+    }
+
+    public record Admin(
+            String username
+    ) {
+    }
+
 }
