@@ -1,6 +1,7 @@
 package com.study.everytime.domain.user.service;
 
-import com.study.everytime.domain.user.dto.UserInfo;
+import com.study.everytime.domain.user.dto.UpdateUserDto;
+import com.study.everytime.domain.user.dto.readUserDto;
 import com.study.everytime.domain.user.entity.User;
 import com.study.everytime.domain.user.exception.UserException;
 import com.study.everytime.domain.user.repository.UserRepository;
@@ -16,11 +17,24 @@ public class UserService {
     private final UserRepository userRepository;
 
     @Transactional(readOnly = true)
-    public UserInfo.Response getUser(Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(UserException.UserNotFoundException::new);
+    public readUserDto readUser(Long userId) {
+        User user = getUser(userId);
+        return new readUserDto(user.getUsername(), user.getEmail(), user.getProvider());
+    }
 
-        return new UserInfo.Response(user.getId(), user.getUsername(), user.getEmail(), user.getProvider(), user.getSub());
+    public void updateUser(Long userId, UpdateUserDto dto) {
+        User user = getUser(userId);
+        user.update(dto.username(), dto.email());
+    }
+
+    public void deleteUser(Long userId) {
+        User user = getUser(userId);
+        userRepository.delete(user);
+    }
+
+    private User getUser(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(UserException.UserNotFoundException::new);
     }
 
 }
