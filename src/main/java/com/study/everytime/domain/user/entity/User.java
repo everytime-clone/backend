@@ -31,11 +31,16 @@ public class User extends BaseTimeEntity {
 
     private LocalDateTime deletedAt;
 
-    private User(String username, String email, Provider provider, String sub) {
+    public User(String username, String email, Provider provider, String sub) {
         this.username = username;
         this.email = email;
         this.provider = provider;
         this.sub = sub;
+    }
+
+    public void update(String username, String email) {
+        this.username = username;
+        this.email = email;
     }
 
 }
