@@ -38,8 +38,4 @@ public class User extends BaseTimeEntity {
         this.sub = sub;
     }
 
-    public static User of(String username, String email, Provider provider, String sub) {
-        return new User(username, email, provider, sub);
-    }
-
 }
