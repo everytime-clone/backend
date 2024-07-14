@@ -1,6 +1,7 @@
 package com.study.everytime.global.jpa;
 
 import org.springframework.data.domain.AuditorAware;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -11,8 +12,13 @@ public class AuditorAwareImpl implements AuditorAware<Long> {
     @Override
     public Optional<Long> getCurrentAuditor() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication instanceof AnonymousAuthenticationToken) {
+            return Optional.empty();
+        }
+
         Long userId = (Long) authentication.getPrincipal();
-        return Optional.ofNullable(userId);
+        return Optional.of(userId);
     }
 
 }
