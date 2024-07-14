@@ -27,6 +27,11 @@ public class UserService {
         user.update(dto.username(), dto.email());
     }
 
+    public void deleteUser(Long userId) {
+        User user = getUser(userId);
+        userRepository.delete(user);
+    }
+
     private User getUser(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(UserException.UserNotFoundException::new);

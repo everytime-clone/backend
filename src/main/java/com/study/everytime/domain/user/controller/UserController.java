@@ -24,4 +24,9 @@ public class UserController {
         userService.updateUser(userId, dto);
     }
 
+    @DeleteMapping
+    public void deleteUser(@AuthenticationPrincipal Long userId) {
+        userService.deleteUser(userId);
+    }
+
 }
