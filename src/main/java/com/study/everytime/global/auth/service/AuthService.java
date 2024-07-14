@@ -37,7 +37,7 @@ public class AuthService {
             throw new AuthException.AlreadyJoinedUserException();
         }
 
-        User user = User.of(request.username(), request.email(), request.provider(), request.sub());
+        User user = new User(request.username(), request.email(), request.provider(), request.sub());
         userRepository.save(user);
     }
 
