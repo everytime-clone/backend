@@ -19,14 +19,13 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.Collections;
-import java.util.Objects;
 
 @Slf4j
 @RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
 
     private static final String PREFIX = "Bearer ";
-    private static final String USER = "USER";
+    private static final String ROLE_USER = "ROLE_USER";
 
     private final JwtUtils jwtUtils;
 
@@ -40,20 +39,20 @@ public class JwtFilter extends OncePerRequestFilter {
         }
 
         String auth = request.getHeader(HttpHeaders.AUTHORIZATION);
-        if (Objects.isNull(auth) || !auth.startsWith(PREFIX)) {
+        if (auth == null || !auth.startsWith(PREFIX)) {
             log.error("Authorization header 형식이 올바르지 않습니다.");
             throw new AuthException.InvalidTokenException();
         }
 
         String token = auth.split(" ")[1];
-        if (Objects.isNull(token)) {
+        if (token == null) {
             log.error("토큰 형식이 유효하지 않습니다.");
             throw new AuthException.InvalidTokenException();
         }
 
         Long userId = jwtUtils.parseAccessToken(token);
         Authentication authentication =
-                new JwtAuthenticationToken(userId, token, Collections.singletonList(new SimpleGrantedAuthority("USER")));
+                new JwtAuthenticationToken(userId, token, Collections.singletonList(new SimpleGrantedAuthority(ROLE_USER)));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
