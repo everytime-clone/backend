@@ -32,14 +32,14 @@ public class BoardController {
         return boardService.searchBoard(name, pageable);
     }
 
-    @PatchMapping(value = "/{boardId}", params = "inform")
+    @PatchMapping("/{boardId}/inform")
     public void updateBoardInform(@AuthenticationPrincipal Long userId,
                                   @PathVariable Long boardId,
                                   @RequestBody UpdateBoardDto.Inform dto) {
         boardService.updateBoardInform(userId, boardId, dto);
     }
 
-    @PatchMapping(value = "/{boardId}", params = "admin")
+    @PatchMapping("/{boardId}/admin")
     public void updateBoardAdmin(@AuthenticationPrincipal Long userId,
                                  @PathVariable Long boardId,
                                  @RequestBody UpdateBoardDto.Admin dto) {
