@@ -26,7 +26,7 @@ public class Board extends BaseEntity {
     private String name;
     private String description;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "admin_id")
     private User admin;
 
