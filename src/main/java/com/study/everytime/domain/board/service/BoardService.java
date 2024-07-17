@@ -1,8 +1,7 @@
 package com.study.everytime.domain.board.service;
 
-import com.study.everytime.domain.board.dto.CreateBoardDto;
 import com.study.everytime.domain.board.dto.ReadBoardDto;
-import com.study.everytime.domain.board.dto.SearchBoardDto;
+import com.study.everytime.domain.board.dto.CreateBoardDto;
 import com.study.everytime.domain.board.dto.UpdateBoardDto;
 import com.study.everytime.domain.board.entity.Board;
 import com.study.everytime.domain.board.exception.BoardException;
@@ -37,10 +36,9 @@ public class BoardService {
     }
 
     @Transactional(readOnly = true)
-    public SearchBoardDto searchBoard(String name, Pageable pageable) {
-        Slice<SearchBoardDto.BoardPageDto> slice = boardRepository.findByNameContains(name, pageable)
-                .map(SearchBoardDto.BoardPageDto::from);
-        return new SearchBoardDto(slice);
+    public Slice<ReadBoardDto> searchBoard(String name, Pageable pageable) {
+        return boardRepository.findByNameContains(name, pageable)
+                .map(ReadBoardDto::from);
     }
 
     public void updateBoardInform(Long userId, Long boardId, UpdateBoardDto.Inform dto) {

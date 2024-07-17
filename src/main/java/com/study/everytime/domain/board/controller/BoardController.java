@@ -1,12 +1,12 @@
 package com.study.everytime.domain.board.controller;
 
-import com.study.everytime.domain.board.dto.CreateBoardDto;
 import com.study.everytime.domain.board.dto.ReadBoardDto;
-import com.study.everytime.domain.board.dto.SearchBoardDto;
+import com.study.everytime.domain.board.dto.CreateBoardDto;
 import com.study.everytime.domain.board.dto.UpdateBoardDto;
 import com.study.everytime.domain.board.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,7 +28,7 @@ public class BoardController {
     }
 
     @GetMapping
-    public SearchBoardDto searchBoard(@RequestParam String name, Pageable pageable) {
+    public Slice<ReadBoardDto> searchBoard(@RequestParam String name, Pageable pageable) {
         return boardService.searchBoard(name, pageable);
     }
 
