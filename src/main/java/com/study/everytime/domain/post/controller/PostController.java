@@ -42,4 +42,9 @@ public class PostController {
         postService.deletePost(userId, postId);
     }
 
+    @PostMapping("/{postId}/like")
+    public void addLike(@AuthenticationPrincipal Long userId, @PathVariable Long postId) {
+        postService.addLike(userId, postId);
+    }
+
 }

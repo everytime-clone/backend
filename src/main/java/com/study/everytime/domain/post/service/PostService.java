@@ -6,8 +6,10 @@ import com.study.everytime.domain.board.repository.BoardRepository;
 import com.study.everytime.domain.post.dto.CreatePostDto;
 import com.study.everytime.domain.post.dto.ReadPostDto;
 import com.study.everytime.domain.post.dto.UpdatePostDto;
+import com.study.everytime.domain.post.entity.Like;
 import com.study.everytime.domain.post.entity.Post;
 import com.study.everytime.domain.post.exception.PostException;
+import com.study.everytime.domain.post.repository.LikeRepository;
 import com.study.everytime.domain.post.repository.PostRepository;
 import com.study.everytime.domain.user.entity.User;
 import com.study.everytime.domain.user.exception.UserException;
@@ -28,6 +30,7 @@ public class PostService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
     private final BoardRepository boardRepository;
+    private final LikeRepository likeRepository;
 
     public void createPost(Long userId, Long boardId, CreatePostDto dto) {
         User user = getUser(userId);
@@ -72,6 +75,18 @@ public class PostService {
         }
 
         postRepository.delete(post);
+    }
+
+    public void addLike(Long userId, Long postId) {
+        if (likeRepository.existsByUser_IdAndPost_Id(userId, postId)) {
+            throw new PostException.LikeDuplicateException();
+        }
+
+        User user = getUser(userId);
+        Post post = getPost(postId);
+
+        Like like = new Like(user, post);
+        likeRepository.save(like);
     }
 
     private User getUser(Long userId) {

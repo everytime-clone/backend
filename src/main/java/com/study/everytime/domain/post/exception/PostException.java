@@ -41,4 +41,14 @@ public class PostException extends BusinessException {
         }
     }
 
+    public static final class LikeDuplicateException extends PostException {
+        public LikeDuplicateException() {
+            super(DEFAULT_CODE_PREFIX, 4, HttpStatus.BAD_REQUEST, "이미 공감한 글입니다.");
+        }
+
+        public LikeDuplicateException(String message) {
+            super(DEFAULT_CODE_PREFIX, 4, HttpStatus.BAD_REQUEST, message);
+        }
+    }
+
 }
