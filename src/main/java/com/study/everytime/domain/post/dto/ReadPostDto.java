@@ -9,7 +9,8 @@ public record ReadPostDto(
         LocalDateTime createdAt,
         String username,
         Long likes,
-        Long scraps
+        Long scraps,
+        Boolean question
 ) {
 
 }

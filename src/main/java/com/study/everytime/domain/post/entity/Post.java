@@ -26,6 +26,8 @@ public class Post extends BaseEntity {
 
     private String title;
     private String content;
+    private Boolean question;
+    private Boolean anonymous;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "writer_id")
@@ -36,9 +38,11 @@ public class Post extends BaseEntity {
 
     private LocalDateTime deletedAt;
 
-    public Post(String title, String content, User writer, Board board) {
+    public Post(String title, String content, Boolean question, Boolean anonymous, User writer, Board board) {
         this.title = title;
         this.content = content;
+        this.question = question;
+        this.anonymous = anonymous;
         this.writer = writer;
         this.board = board;
     }

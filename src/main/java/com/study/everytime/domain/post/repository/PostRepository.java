@@ -11,7 +11,11 @@ import java.util.Optional;
 
 public interface PostRepository extends JpaRepository<Post, Long> {
     @Query("""
-            select new com.study.everytime.domain.post.dto.ReadPostDto(p.id, p.title, p.content, p.createdAt, p.writer.username, count(l), count(s))
+            select new com.study.everytime.domain.post.dto.ReadPostDto(
+                p.id, p.title, p.content, p.createdAt,
+                case when p.anonymous then '익명'
+                     else p.writer.username
+                end, count(l), count(s), p.question)
             from Post p
             left join Like l on l.post = p
             left join Scrap s on s.post = p
@@ -21,7 +25,11 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     Optional<ReadPostDto> findReadPostDtoById(Long postId);
 
     @Query("""
-            select new com.study.everytime.domain.post.dto.ReadPostDto(p.id, p.title, p.content, p.createdAt, p.writer.username, count(l), count(s))
+            select new com.study.everytime.domain.post.dto.ReadPostDto(
+                p.id, p.title, p.content, p.createdAt,
+                case when p.anonymous then '익명'
+                     else p.writer.username
+                end, count(l), count(s), p.question)
             from Post p
             left join Like l on l.post = p
             left join Scrap s on s.post = p
