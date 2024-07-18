@@ -33,9 +33,9 @@ public class PostService {
         User user = getUser(userId);
         Board board = getBoard(boardId);
 
-        log.info("title: {}, content: {}", dto.title(), dto.content());
+        log.info("title: {}, content: {}, question: {}, anonymous: {}", dto.title(), dto.content(), dto.question(), dto.anonymous());
 
-        Post post = new Post(dto.title(), dto.content(), user, board);
+        Post post = new Post(dto.title(), dto.content(), dto.question(), dto.anonymous(), user, board);
         postRepository.save(post);
     }
 
@@ -65,6 +65,10 @@ public class PostService {
 
         if (!post.getWriter().getId().equals(userId)) {
             throw new PostException.PostAuthException();
+        }
+
+        if (post.getQuestion()) {
+            throw new PostException.PostQuestionDeleteException();
         }
 
         postRepository.delete(post);

@@ -31,4 +31,14 @@ public class PostException extends BusinessException {
         }
     }
 
+    public static final class PostQuestionDeleteException extends PostException {
+        public PostQuestionDeleteException() {
+            super(DEFAULT_CODE_PREFIX, 3, HttpStatus.BAD_REQUEST, "질문글은 삭제할 수 없습니다.");
+        }
+
+        public PostQuestionDeleteException(String message) {
+            super(DEFAULT_CODE_PREFIX, 3, HttpStatus.BAD_REQUEST, message);
+        }
+    }
+
 }
