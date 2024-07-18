@@ -103,4 +103,5 @@ public class PostService {
         return boardRepository.findById(boardId)
                 .orElseThrow(BoardException.BoardNotFoundException::new);
     }
+
 }
