@@ -11,38 +11,37 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/board/{boardId}/post")
 @RequiredArgsConstructor
 public class PostController {
 
     private final PostService postService;
 
-    @PostMapping
+    @PostMapping("/board/{boardId}/post")
     public void createPost(@AuthenticationPrincipal Long userId, @PathVariable Long boardId, @RequestBody CreatePostDto dto) {
         postService.createPost(userId, boardId, dto);
     }
 
-    @GetMapping("/{postId}")
+    @GetMapping("/board/{boardId}/post")
+    public Slice<ReadPostDto> readBoardPosts(@PathVariable Long boardId, Pageable pageable) {
+        return postService.readBoardPosts(boardId, pageable);
+    }
+
+    @GetMapping("/post/{postId}")
     public ReadPostDto readPost(@PathVariable Long postId) {
         return postService.readPost(postId);
     }
 
-    @GetMapping
-    public Slice<ReadPostDto> readPostPage(@PathVariable Long boardId, Pageable pageable) {
-        return postService.readPostPage(boardId, pageable);
-    }
-
-    @PatchMapping("/{postId}")
+    @PatchMapping("/post/{postId}")
     public void updatePost(@AuthenticationPrincipal Long userId, @PathVariable Long postId, @RequestBody UpdatePostDto dto) {
         postService.updatePost(userId, postId, dto);
     }
 
-    @DeleteMapping("/{postId}")
+    @DeleteMapping("/post/{postId}")
     public void deletePost(@AuthenticationPrincipal Long userId, @PathVariable Long postId) {
         postService.deletePost(userId, postId);
     }
 
-    @PostMapping("/{postId}/like")
+    @PostMapping("/post/{postId}/like")
     public void addLike(@AuthenticationPrincipal Long userId, @PathVariable Long postId) {
         postService.addLike(userId, postId);
     }
