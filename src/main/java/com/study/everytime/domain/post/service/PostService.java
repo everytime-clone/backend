@@ -4,6 +4,7 @@ import com.study.everytime.domain.board.entity.Board;
 import com.study.everytime.domain.board.exception.BoardException;
 import com.study.everytime.domain.board.repository.BoardRepository;
 import com.study.everytime.domain.post.dto.CreatePostDto;
+import com.study.everytime.domain.post.dto.PostInformDto;
 import com.study.everytime.domain.post.dto.ReadPostDto;
 import com.study.everytime.domain.post.dto.UpdatePostDto;
 import com.study.everytime.domain.post.entity.Like;
@@ -44,13 +45,15 @@ public class PostService {
 
     @Transactional(readOnly = true)
     public ReadPostDto readPost(Long postId) {
-        return postRepository.findReadPostDtoById(postId)
+        PostInformDto postInformDto = postRepository.findReadPostDtoById(postId)
                 .orElseThrow(PostException.PostNotFoundException::new);
+        return ReadPostDto.from(postInformDto);
     }
 
     @Transactional(readOnly = true)
     public Slice<ReadPostDto> readPostPage(Long boardId, Pageable pageable) {
-        return postRepository.findByBoard_Id(boardId, pageable);
+        return postRepository.findByBoard_Id(boardId, pageable)
+                .map(ReadPostDto::from);
     }
 
     public void updatePost(Long userId, Long postId, UpdatePostDto dto) {
