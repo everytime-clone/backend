@@ -13,4 +13,22 @@ public record ReadPostDto(
         Boolean question
 ) {
 
+    public static ReadPostDto from(PostInformDto dto) {
+        String displayName = dto.username();
+        if (dto.anonymous()) {
+            displayName = "익명";
+        }
+
+        return new ReadPostDto(
+                dto.id(),
+                dto.title(),
+                dto.content(),
+                dto.createdAt(),
+                displayName,
+                dto.likes(),
+                dto.scraps(),
+                dto.question()
+        );
+    }
+
 }
