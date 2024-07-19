@@ -46,4 +46,9 @@ public class PostController {
         postService.addLike(userId, postId);
     }
 
+    @GetMapping("/post/mypost")
+    public Slice<ReadPostDto> readMyPosts(@AuthenticationPrincipal Long userId, Pageable pageable) {
+        return postService.readMyPosts(userId, pageable);
+    }
+
 }

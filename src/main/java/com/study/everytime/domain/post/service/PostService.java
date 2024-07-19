@@ -47,13 +47,13 @@ public class PostService {
     public ReadPostDto readPost(Long userId, Long postId) {
         PostInformDto postInformDto = postRepository.findReadPostDtoById(postId)
                 .orElseThrow(PostException.PostNotFoundException::new);
-        return ReadPostDto.from(userId, postInformDto);
+        return ReadPostDto.of(userId, postInformDto);
     }
 
     @Transactional(readOnly = true)
     public Slice<ReadPostDto> readBoardPosts(Long userId, Long boardId, Pageable pageable) {
         return postRepository.findByBoard_Id(boardId, pageable)
-                .map(inform -> ReadPostDto.from(userId, inform));
+                .map(inform -> ReadPostDto.of(userId, inform));
     }
 
     public void updatePost(Long userId, Long postId, UpdatePostDto dto) {
@@ -90,6 +90,12 @@ public class PostService {
 
         Like like = new Like(user, post);
         likeRepository.save(like);
+    }
+
+    @Transactional(readOnly = true)
+    public Slice<ReadPostDto> readMyPosts(Long userId, Pageable pageable) {
+        return postRepository.findByWriter_id(userId, pageable)
+                .map(inform -> ReadPostDto.of(userId, inform));
     }
 
     private User getUser(Long userId) {
