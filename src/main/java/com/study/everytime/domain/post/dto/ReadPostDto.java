@@ -10,14 +10,17 @@ public record ReadPostDto(
         String username,
         Long likes,
         Long scraps,
-        Boolean question
+        Boolean question,
+        Boolean writer
 ) {
 
-    public static ReadPostDto from(PostInformDto dto) {
+    public static ReadPostDto of(Long userId, PostInformDto dto) {
         String displayName = dto.username();
         if (dto.anonymous()) {
             displayName = "익명";
         }
+
+        Boolean writer = dto.writerId().equals(userId);
 
         return new ReadPostDto(
                 dto.id(),
@@ -27,7 +30,8 @@ public record ReadPostDto(
                 displayName,
                 dto.likes(),
                 dto.scraps(),
-                dto.question()
+                dto.question(),
+                writer
         );
     }
 

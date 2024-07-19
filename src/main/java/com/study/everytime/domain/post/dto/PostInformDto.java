@@ -7,6 +7,7 @@ public record PostInformDto(
         String title,
         String content,
         LocalDateTime createdAt,
+        Long writerId,
         String username,
         Long likes,
         Long scraps,

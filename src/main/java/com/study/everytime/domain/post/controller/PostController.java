@@ -22,13 +22,13 @@ public class PostController {
     }
 
     @GetMapping("/board/{boardId}/post")
-    public Slice<ReadPostDto> readBoardPosts(@PathVariable Long boardId, Pageable pageable) {
-        return postService.readBoardPosts(boardId, pageable);
+    public Slice<ReadPostDto> readBoardPosts(@AuthenticationPrincipal Long userId, @PathVariable Long boardId, Pageable pageable) {
+        return postService.readBoardPosts(userId, boardId, pageable);
     }
 
     @GetMapping("/post/{postId}")
-    public ReadPostDto readPost(@PathVariable Long postId) {
-        return postService.readPost(postId);
+    public ReadPostDto readPost(@AuthenticationPrincipal Long userId, @PathVariable Long postId) {
+        return postService.readPost(userId, postId);
     }
 
     @PatchMapping("/post/{postId}")

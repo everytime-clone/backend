@@ -44,16 +44,16 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    public ReadPostDto readPost(Long postId) {
+    public ReadPostDto readPost(Long userId, Long postId) {
         PostInformDto postInformDto = postRepository.findReadPostDtoById(postId)
                 .orElseThrow(PostException.PostNotFoundException::new);
-        return ReadPostDto.from(postInformDto);
+        return ReadPostDto.from(userId, postInformDto);
     }
 
     @Transactional(readOnly = true)
-    public Slice<ReadPostDto> readPostPage(Long boardId, Pageable pageable) {
+    public Slice<ReadPostDto> readBoardPosts(Long userId, Long boardId, Pageable pageable) {
         return postRepository.findByBoard_Id(boardId, pageable)
-                .map(ReadPostDto::from);
+                .map(inform -> ReadPostDto.from(userId, inform));
     }
 
     public void updatePost(Long userId, Long postId, UpdatePostDto dto) {
