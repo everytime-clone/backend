@@ -12,7 +12,7 @@ import java.util.Optional;
 public interface PostRepository extends JpaRepository<Post, Long> {
     @Query("""
             select new com.study.everytime.domain.post.dto.PostInformDto(
-                p.id, p.title, p.content, p.createdAt, p.writer.username, count(l), count(s), p.question, p.anonymous)
+                p.id, p.title, p.content, p.createdAt, p.writer.id, p.writer.username, count(l), count(s), p.question, p.anonymous)
             from Post p
             left join Like l on l.post = p
             left join Scrap s on s.post = p
@@ -23,7 +23,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     @Query("""
             select new com.study.everytime.domain.post.dto.PostInformDto(
-                p.id, p.title, p.content, p.createdAt, p.writer.username, count(l), count(s), p.question, p.anonymous)
+                p.id, p.title, p.content, p.createdAt, p.writer.id, p.writer.username, count(l), count(s), p.question, p.anonymous)
             from Post p
             left join Like l on l.post = p
             left join Scrap s on s.post = p
@@ -31,4 +31,15 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             group by p.id
             """)
     Slice<PostInformDto> findByBoard_Id(Long boardId, Pageable pageable);
+
+    @Query("""
+            select new com.study.everytime.domain.post.dto.PostInformDto(
+                p.id, p.title, p.content, p.createdAt, p.writer.id, p.writer.username, count(l), count(s), p.question, p.anonymous)
+            from Post p
+            left join Like l on l.post = p
+            left join Scrap s on s.post = p
+            where p.writer.id = :userId
+            group by p.id
+            """)
+    Slice<PostInformDto> findByWriter_id(Long userId, Pageable pageable);
 }
