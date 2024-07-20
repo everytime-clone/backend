@@ -51,4 +51,25 @@ public class PostException extends BusinessException {
         }
     }
 
+    public static final class ScrapDuplicatedException extends PostException {
+        public ScrapDuplicatedException() {
+            super(DEFAULT_CODE_PREFIX, 5, HttpStatus.BAD_REQUEST, "이미 스크랩한 글입니다.");
+        }
+
+        public ScrapDuplicatedException(String message) {
+            super(DEFAULT_CODE_PREFIX, 5, HttpStatus.BAD_REQUEST, message);
+        }
+    }
+
+    public static final class ScrapNotFoundException extends PostException {
+
+        public ScrapNotFoundException() {
+            super(DEFAULT_CODE_PREFIX, 6, HttpStatus.BAD_REQUEST, "스크랩을 찾을 수 없습니다.");
+        }
+
+        public ScrapNotFoundException(String message) {
+            super(DEFAULT_CODE_PREFIX, 6, HttpStatus.BAD_REQUEST, message);
+        }
+    }
+
 }
