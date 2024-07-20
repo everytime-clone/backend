@@ -9,9 +9,11 @@ import com.study.everytime.domain.post.dto.ReadPostDto;
 import com.study.everytime.domain.post.dto.UpdatePostDto;
 import com.study.everytime.domain.post.entity.Like;
 import com.study.everytime.domain.post.entity.Post;
+import com.study.everytime.domain.post.entity.Scrap;
 import com.study.everytime.domain.post.exception.PostException;
 import com.study.everytime.domain.post.repository.LikeRepository;
 import com.study.everytime.domain.post.repository.PostRepository;
+import com.study.everytime.domain.post.repository.ScrapRepository;
 import com.study.everytime.domain.user.entity.User;
 import com.study.everytime.domain.user.exception.UserException;
 import com.study.everytime.domain.user.repository.UserRepository;
@@ -32,6 +34,7 @@ public class PostService {
     private final UserRepository userRepository;
     private final BoardRepository boardRepository;
     private final LikeRepository likeRepository;
+    private final ScrapRepository scrapRepository;
 
     public void createPost(Long userId, Long boardId, CreatePostDto dto) {
         User user = getUser(userId);
@@ -90,6 +93,24 @@ public class PostService {
 
         Like like = new Like(user, post);
         likeRepository.save(like);
+    }
+
+    public void addScrap(Long userId, Long postId) {
+        if (scrapRepository.existsByUser_IdAndPost_Id(userId, postId)) {
+            throw new PostException.ScrapDuplicatedException();
+        }
+
+        User user = getUser(userId);
+        Post post = getPost(postId);
+
+        Scrap scrap = new Scrap(user, post);
+        scrapRepository.save(scrap);
+    }
+
+    public void cancelScrap(Long userId, Long postId) {
+        Scrap scrap = scrapRepository.findByUser_IdAndPost_Id(userId, postId)
+                .orElseThrow(PostException.ScrapNotFoundException::new);
+        scrapRepository.delete(scrap);
     }
 
     @Transactional(readOnly = true)

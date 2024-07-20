@@ -46,6 +46,16 @@ public class PostController {
         postService.addLike(userId, postId);
     }
 
+    @PostMapping("/post/{postId}/scrap")
+    public void addScrap(@AuthenticationPrincipal Long userId, @PathVariable Long postId) {
+        postService.addScrap(userId, postId);
+    }
+
+    @DeleteMapping("/post/{postId}/scrap")
+    public void calcelScrap(@AuthenticationPrincipal Long userId, @PathVariable Long postId) {
+        postService.cancelScrap(userId, postId);
+    }
+
     @GetMapping("/post/mypost")
     public Slice<ReadPostDto> readMyPosts(@AuthenticationPrincipal Long userId, Pageable pageable) {
         return postService.readMyPosts(userId, pageable);
