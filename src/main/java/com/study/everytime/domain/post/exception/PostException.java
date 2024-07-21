@@ -31,22 +31,22 @@ public class PostException extends BusinessException {
         }
     }
 
-    public static final class PostQuestionDeleteException extends PostException {
-        public PostQuestionDeleteException() {
+    public static final class QuestionNotDeletableException extends PostException {
+        public QuestionNotDeletableException() {
             super(DEFAULT_CODE_PREFIX, 3, HttpStatus.BAD_REQUEST, "질문글은 삭제할 수 없습니다.");
         }
 
-        public PostQuestionDeleteException(String message) {
+        public QuestionNotDeletableException(String message) {
             super(DEFAULT_CODE_PREFIX, 3, HttpStatus.BAD_REQUEST, message);
         }
     }
 
-    public static final class LikeDuplicateException extends PostException {
-        public LikeDuplicateException() {
+    public static final class LikeDuplicatedException extends PostException {
+        public LikeDuplicatedException() {
             super(DEFAULT_CODE_PREFIX, 4, HttpStatus.BAD_REQUEST, "이미 공감한 글입니다.");
         }
 
-        public LikeDuplicateException(String message) {
+        public LikeDuplicatedException(String message) {
             super(DEFAULT_CODE_PREFIX, 4, HttpStatus.BAD_REQUEST, message);
         }
     }

@@ -3,10 +3,7 @@ package com.study.everytime.domain.post.service;
 import com.study.everytime.domain.board.entity.Board;
 import com.study.everytime.domain.board.exception.BoardException;
 import com.study.everytime.domain.board.repository.BoardRepository;
-import com.study.everytime.domain.post.dto.CreatePostDto;
-import com.study.everytime.domain.post.dto.PostInformDto;
-import com.study.everytime.domain.post.dto.ReadPostDto;
-import com.study.everytime.domain.post.dto.UpdatePostDto;
+import com.study.everytime.domain.post.dto.*;
 import com.study.everytime.domain.post.entity.Like;
 import com.study.everytime.domain.post.entity.Post;
 import com.study.everytime.domain.post.entity.Scrap;
@@ -24,6 +21,8 @@ import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -40,7 +39,7 @@ public class PostService {
         User user = getUser(userId);
         Board board = getBoard(boardId);
 
-        log.info("title: {}, content: {}, question: {}, anonymous: {}", dto.title(), dto.content(), dto.question(), dto.anonymous());
+        log.info("title: {}, content: {}, isQuestion: {}, anonymous: {}", dto.title(), dto.content(), dto.question(), dto.anonymous());
 
         Post post = new Post(dto.title(), dto.content(), dto.question(), dto.anonymous(), user, board);
         postRepository.save(post);
@@ -48,15 +47,15 @@ public class PostService {
 
     @Transactional(readOnly = true)
     public ReadPostDto readPost(Long userId, Long postId) {
-        PostInformDto postInformDto = postRepository.findReadPostDtoById(postId)
-                .orElseThrow(PostException.PostNotFoundException::new);
-        return ReadPostDto.of(userId, postInformDto);
+        Post post = getPost(postId);
+        List<Like> likes = likeRepository.findByPost_Id(postId);
+        List<Scrap> scraps = scrapRepository.findByPost_Id(postId);
+        return ReadPostDto.of(userId, post, likes, scraps);
     }
 
     @Transactional(readOnly = true)
-    public Slice<ReadPostDto> readBoardPosts(Long userId, Long boardId, Pageable pageable) {
-        return postRepository.findByBoard_Id(boardId, pageable)
-                .map(inform -> ReadPostDto.of(userId, inform));
+    public Slice<BoardPostPageDto> readBoardPosts(Long boardId, Pageable pageable) {
+        return postRepository.findByBoard_Id(boardId, pageable);
     }
 
     public void updatePost(Long userId, Long postId, UpdatePostDto dto) {
@@ -77,7 +76,7 @@ public class PostService {
         }
 
         if (post.getQuestion()) {
-            throw new PostException.PostQuestionDeleteException();
+            throw new PostException.QuestionNotDeletableException();
         }
 
         postRepository.delete(post);
@@ -85,7 +84,7 @@ public class PostService {
 
     public void addLike(Long userId, Long postId) {
         if (likeRepository.existsByUser_IdAndPost_Id(userId, postId)) {
-            throw new PostException.LikeDuplicateException();
+            throw new PostException.LikeDuplicatedException();
         }
 
         User user = getUser(userId);
@@ -114,9 +113,8 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    public Slice<ReadPostDto> readMyPosts(Long userId, Pageable pageable) {
-        return postRepository.findByWriter_id(userId, pageable)
-                .map(inform -> ReadPostDto.of(userId, inform));
+    public Slice<MyPostPageDto> readMyPosts(Long userId, Pageable pageable) {
+        return postRepository.findByWriter_id(userId, pageable);
     }
 
     private User getUser(Long userId) {
