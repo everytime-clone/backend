@@ -1,8 +1,6 @@
 package com.study.everytime.domain.post.controller;
 
-import com.study.everytime.domain.post.dto.CreatePostDto;
-import com.study.everytime.domain.post.dto.ReadPostDto;
-import com.study.everytime.domain.post.dto.UpdatePostDto;
+import com.study.everytime.domain.post.dto.*;
 import com.study.everytime.domain.post.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -22,8 +20,8 @@ public class PostController {
     }
 
     @GetMapping("/board/{boardId}/post")
-    public Slice<ReadPostDto> readBoardPosts(@AuthenticationPrincipal Long userId, @PathVariable Long boardId, Pageable pageable) {
-        return postService.readBoardPosts(userId, boardId, pageable);
+    public Slice<BoardPostPageDto> readBoardPosts(@PathVariable Long boardId, Pageable pageable) {
+        return postService.readBoardPosts(boardId, pageable);
     }
 
     @GetMapping("/post/{postId}")
@@ -57,7 +55,7 @@ public class PostController {
     }
 
     @GetMapping("/post/mypost")
-    public Slice<ReadPostDto> readMyPosts(@AuthenticationPrincipal Long userId, Pageable pageable) {
+    public Slice<MyPostPageDto> readMyPosts(@AuthenticationPrincipal Long userId, Pageable pageable) {
         return postService.readMyPosts(userId, pageable);
     }
 

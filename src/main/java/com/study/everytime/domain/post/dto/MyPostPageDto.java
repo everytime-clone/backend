@@ -2,16 +2,14 @@ package com.study.everytime.domain.post.dto;
 
 import java.time.LocalDateTime;
 
-public record PostInformDto(
+public record MyPostPageDto(
         Long id,
+        String boardName,
         String title,
         String content,
         LocalDateTime createdAt,
-        Long writerId,
         String username,
-        Long likes,
-        Long scraps,
-        Boolean question,
-        Boolean anonymous
+        Long likeCount
 ) {
+
 }
