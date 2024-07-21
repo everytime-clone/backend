@@ -119,6 +119,12 @@ public class PostService {
                 .map(MyPostPageDto::from);
     }
 
+    @Transactional(readOnly = true)
+    public Slice<MyPostPageDto> readMyScrabs(Long userId, Pageable pageable) {
+        return postRepository.findByScrab_User_Id(userId, pageable)
+                .map(MyPostPageDto::from);
+    }
+
     private User getUser(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(UserException.UserNotFoundException::new);
