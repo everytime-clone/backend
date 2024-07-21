@@ -59,4 +59,9 @@ public class PostController {
         return postService.readMyPosts(userId, pageable);
     }
 
+    @GetMapping("/post/myscrab")
+    public Slice<MyPostPageDto> readMyScrabs(@AuthenticationPrincipal Long userId, Pageable pageable) {
+        return postService.readMyScrabs(userId, pageable);
+    }
+
 }

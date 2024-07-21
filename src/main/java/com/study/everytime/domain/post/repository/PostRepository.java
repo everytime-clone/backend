@@ -28,4 +28,17 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             where p.writer.id = :userId
             """)
     Slice<PostPageDto> findByWriter_id(Long userId, Pageable pageable);
+
+    @Query("""
+            select p as post,
+                  (select count(l)
+                   from Like l where l.post = p) as likeCount
+            from Post p
+            join fetch p.board
+            join fetch p.writer
+            where p in (select s.post
+                        from Scrap s
+                        where s.user.id = :userId)
+            """)
+    Slice<PostPageDto> findByScrab_User_Id(Long userId, Pageable pageable);
 }
