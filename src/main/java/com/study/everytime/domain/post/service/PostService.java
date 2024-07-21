@@ -55,7 +55,8 @@ public class PostService {
 
     @Transactional(readOnly = true)
     public Slice<BoardPostPageDto> readBoardPosts(Long boardId, Pageable pageable) {
-        return postRepository.findByBoard_Id(boardId, pageable);
+        return postRepository.findByBoard_Id(boardId, pageable)
+                .map(BoardPostPageDto::from);
     }
 
     public void updatePost(Long userId, Long postId, UpdatePostDto dto) {
@@ -114,7 +115,8 @@ public class PostService {
 
     @Transactional(readOnly = true)
     public Slice<MyPostPageDto> readMyPosts(Long userId, Pageable pageable) {
-        return postRepository.findByWriter_id(userId, pageable);
+        return postRepository.findByWriter_id(userId, pageable)
+                .map(MyPostPageDto::from);
     }
 
     private User getUser(Long userId) {
