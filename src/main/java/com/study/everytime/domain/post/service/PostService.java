@@ -77,7 +77,7 @@ public class PostService {
         }
 
         if (post.getQuestion()) {
-            throw new PostException.PostQuestionDeleteException();
+            throw new PostException.QuestionNotDeletableException();
         }
 
         postRepository.delete(post);
@@ -85,7 +85,7 @@ public class PostService {
 
     public void addLike(Long userId, Long postId) {
         if (likeRepository.existsByUser_IdAndPost_Id(userId, postId)) {
-            throw new PostException.LikeDuplicateException();
+            throw new PostException.LikeDuplicatedException();
         }
 
         User user = getUser(userId);
