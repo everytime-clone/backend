@@ -125,6 +125,12 @@ public class PostService {
                 .map(MyPostPageDto::from);
     }
 
+    @Transactional(readOnly = true)
+    public Slice<MyPostPageDto> readHotPosts(Pageable pageable) {
+        return postRepository.findByLikeCountGreaterThanEqual(10, pageable)
+                .map(MyPostPageDto::from);
+    }
+
     private User getUser(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(UserException.UserNotFoundException::new);

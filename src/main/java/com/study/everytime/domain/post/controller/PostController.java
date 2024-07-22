@@ -64,4 +64,9 @@ public class PostController {
         return postService.readMyScrabs(userId, pageable);
     }
 
+    @GetMapping("/post/hotpost")
+    public Slice<MyPostPageDto> readHotPosts(Pageable pageable) {
+        return postService.readHotPosts(pageable);
+    }
+
 }

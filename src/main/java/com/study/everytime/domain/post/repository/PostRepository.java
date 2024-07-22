@@ -41,4 +41,16 @@ public interface PostRepository extends JpaRepository<Post, Long> {
                         where s.user.id = :userId)
             """)
     Slice<PostPageDto> findByScrab_User_Id(Long userId, Pageable pageable);
+
+    @Query("""
+            select p as post,
+                  (select count(l)
+                   from Like l where l.post = p) as likeCount
+            from Post p
+            join fetch p.board
+            join fetch p.writer
+            where (select count(l)
+                   from Like l where l.post = p) >= 10
+            """)
+    Slice<PostPageDto> findByLikeCountGreaterThanEqual(Integer likeCount, Pageable pageable);
 }
