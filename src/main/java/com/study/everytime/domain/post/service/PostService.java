@@ -4,11 +4,11 @@ import com.study.everytime.domain.board.entity.Board;
 import com.study.everytime.domain.board.exception.BoardException;
 import com.study.everytime.domain.board.repository.BoardRepository;
 import com.study.everytime.domain.post.dto.*;
-import com.study.everytime.domain.post.entity.Like;
+import com.study.everytime.domain.post.entity.PostLike;
 import com.study.everytime.domain.post.entity.Post;
 import com.study.everytime.domain.post.entity.Scrap;
 import com.study.everytime.domain.post.exception.PostException;
-import com.study.everytime.domain.post.repository.LikeRepository;
+import com.study.everytime.domain.post.repository.PostLikeRepository;
 import com.study.everytime.domain.post.repository.PostRepository;
 import com.study.everytime.domain.post.repository.ScrapRepository;
 import com.study.everytime.domain.user.entity.User;
@@ -32,7 +32,7 @@ public class PostService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
     private final BoardRepository boardRepository;
-    private final LikeRepository likeRepository;
+    private final PostLikeRepository postLikeRepository;
     private final ScrapRepository scrapRepository;
 
     public void createPost(Long userId, Long boardId, CreatePostDto dto) {
@@ -48,9 +48,9 @@ public class PostService {
     @Transactional(readOnly = true)
     public ReadPostDto readPost(Long userId, Long postId) {
         Post post = getPost(postId);
-        List<Like> likes = likeRepository.findByPost_Id(postId);
+        List<PostLike> postLikes = postLikeRepository.findByPost_Id(postId);
         List<Scrap> scraps = scrapRepository.findByPost_Id(postId);
-        return ReadPostDto.of(userId, post, likes, scraps);
+        return ReadPostDto.of(userId, post, postLikes, scraps);
     }
 
     @Transactional(readOnly = true)
@@ -84,15 +84,15 @@ public class PostService {
     }
 
     public void addLike(Long userId, Long postId) {
-        if (likeRepository.existsByUser_IdAndPost_Id(userId, postId)) {
+        if (postLikeRepository.existsByUser_IdAndPost_Id(userId, postId)) {
             throw new PostException.LikeDuplicatedException();
         }
 
         User user = getUser(userId);
         Post post = getPost(postId);
 
-        Like like = new Like(user, post);
-        likeRepository.save(like);
+        PostLike postLike = new PostLike(user, post);
+        postLikeRepository.save(postLike);
     }
 
     public void addScrap(Long userId, Long postId) {

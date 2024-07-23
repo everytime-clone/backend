@@ -1,6 +1,6 @@
 package com.study.everytime.domain.post.dto;
 
-import com.study.everytime.domain.post.entity.Like;
+import com.study.everytime.domain.post.entity.PostLike;
 import com.study.everytime.domain.post.entity.Post;
 import com.study.everytime.domain.post.entity.Scrap;
 
@@ -22,7 +22,7 @@ public record ReadPostDto(
         boolean isScraped
 ) {
 
-    public static ReadPostDto of(Long userId, Post post, List<Like> likes, List<Scrap> scraps) {
+    public static ReadPostDto of(Long userId, Post post, List<PostLike> postLikes, List<Scrap> scraps) {
         return new ReadPostDto(
                 post.getId(),
                 post.getBoard().getName(),
@@ -30,11 +30,11 @@ public record ReadPostDto(
                 post.getContent(),
                 post.getCreatedAt(),
                 post.getAnonymous() ? "익명" : post.getWriter().getUsername(),
-                likes.size(),
+                postLikes.size(),
                 scraps.size(),
                 post.getQuestion(),
                 post.getWriter().getId().equals(userId),
-                likes.stream().anyMatch(l -> l.getUser().getId().equals(userId)),
+                postLikes.stream().anyMatch(l -> l.getUser().getId().equals(userId)),
                 scraps.stream().anyMatch(s -> s.getUser().getId().equals(userId))
         );
     }
