@@ -11,7 +11,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     @Query("""
             select p as post,
                   (select count(l)
-                   from Like l where l.post = p) as likeCount
+                   from PostLike l where l.post = p) as likeCount
             from Post p
             join fetch p.writer
             where p.board.id = :boardId
@@ -21,7 +21,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     @Query("""
             select p as post,
                   (select count(l)
-                   from Like l where l.post = p) as likeCount
+                   from PostLike l where l.post = p) as likeCount
             from Post p
             join fetch p.board
             join fetch p.writer
@@ -32,7 +32,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     @Query("""
             select p as post,
                   (select count(l)
-                   from Like l where l.post = p) as likeCount
+                   from PostLike l where l.post = p) as likeCount
             from Post p
             join fetch p.board
             join fetch p.writer
@@ -45,12 +45,12 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     @Query("""
             select p as post,
                   (select count(l)
-                   from Like l where l.post = p) as likeCount
+                   from PostLike l where l.post = p) as likeCount
             from Post p
             join fetch p.board
             join fetch p.writer
             where (select count(l)
-                   from Like l where l.post = p) >= 10
+                   from PostLike l where l.post = p) >= 10
             """)
     Slice<PostPageDto> findByLikeCountGreaterThanEqual(Integer likeCount, Pageable pageable);
 }

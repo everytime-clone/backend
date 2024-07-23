@@ -7,10 +7,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "likes")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Like {
+public class PostLike {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,7 +23,7 @@ public class Like {
     @JoinColumn(name = "post_id")
     private Post post;
 
-    public Like(User user, Post post) {
+    public PostLike(User user, Post post) {
         this.user = user;
         this.post = post;
     }
